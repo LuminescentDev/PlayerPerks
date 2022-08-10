@@ -23,7 +23,6 @@ public class CommandPerks extends BaseCommand {
             locale.sendMessage(context.getSender(), "not-player");
             return;
         }
-
         this.rosePlugin.getManager(GUIManager.class).getGUI().open(player, 1);
     }
 

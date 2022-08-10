@@ -14,7 +14,7 @@ public final class PlayerPerks extends RosePlugin {
     private static PlayerPerks instance;
 
     public PlayerPerks() {
-        super(-1, 0, ConfigManager.class, DataManager.class, LocaleManager.class, CommandManager.class);
+        super(-1, -1, ConfigManager.class, DataManager.class, LocaleManager.class, CommandManager.class);
         instance = this;
     }
 
@@ -22,9 +22,7 @@ public final class PlayerPerks extends RosePlugin {
     protected void enable() {
         registerPerks();
         DataManager dataManager = this.getManager(DataManager.class);
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            dataManager.getPlayerData(player.getUniqueId(), data -> {});
-        });
+        Bukkit.getOnlinePlayers().forEach(player -> dataManager.getPlayerData(player.getUniqueId(), data -> {}));
 
         this.getManager(GUIManager.class).createGUI();
     }

@@ -4,6 +4,7 @@ import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.config.CommentedFileConfiguration;
 import dev.rosewood.rosegarden.config.RoseSetting;
 import dev.rosewood.rosegarden.manager.AbstractConfigurationManager;
+import xyz.akiradev.playerperks.PlayerPerks;
 
 public class ConfigManager extends AbstractConfigurationManager {
 
@@ -24,32 +25,32 @@ public class ConfigManager extends AbstractConfigurationManager {
 
         @Override
         public String getKey() {
-            return null;
+            return this.key;
         }
 
         @Override
         public Object getDefaultValue() {
-            return null;
+            return this.defaultValue;
         }
 
         @Override
         public String[] getComments() {
-            return new String[0];
+            return this.comments;
         }
 
         @Override
         public Object getCachedValue() {
-            return null;
+            return this.value;
+        }
+
+        @Override
+        public void setCachedValue(Object value) {
+            this.value = value;
         }
 
         @Override
         public CommentedFileConfiguration getBaseConfig() {
-            return null;
-        }
-
-        @Override
-        public void setCachedValue(Object o) {
-
+            return PlayerPerks.getInstance().getManager(ConfigManager.class).getConfig();
         }
     }
 
