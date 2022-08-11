@@ -20,10 +20,10 @@ public class CommandPerks extends BaseCommand {
         final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
 
         if (!(context.getSender() instanceof Player player)) {
-            locale.sendMessage(context.getSender(), "not-player");
+            locale.sendMessage(context.getSender(), " ");
             return;
         }
-        this.rosePlugin.getManager(GUIManager.class).getGUI().open(player, 1);
+        this.rosePlugin.getManager(GUIManager.class).openGUI((player));
     }
 
     @Override

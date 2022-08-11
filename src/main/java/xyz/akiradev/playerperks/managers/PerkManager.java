@@ -16,29 +16,23 @@ import java.util.Map;
 public class PerkManager extends Manager {
 
     private CommentedFileConfiguration config;
-
-    private static PerkManager instance;
     private final Map<String, Perk> perks = new HashMap<>();
     private final Map<String, Perk> perIDs = new HashMap<>();
 
     public PerkManager(RosePlugin rosePlugin) {
         super(rosePlugin);
-        instance = this;
-    }
-
-    public static PerkManager getInstance() {
-        return instance;
     }
 
     private void setDefaultSettings(Perk perk){
         File directory = new File(PlayerPerks.getInstance().getDataFolder(), "perks");
+        //noinspection ResultOfMethodCallIgnored
         directory.mkdirs();
 
         File file = new File(directory, perk.getID() + ".yml");
         this.config = CommentedFileConfiguration.loadConfiguration(file);
 
-        boolean changed = this.setIfNotExists("name", perk.getName());
-        changed |= this.setIfNotExists("description", perk.getDescription());
+        boolean changed = this.setIfNotExists("name", perk.getDefaultName());
+        changed |= this.setIfNotExists("description", perk.getDefaultDescription());
         changed |= this.setIfNotExists("material", perk.getDefaultMaterial().name());
         changed |= this.setIfNotExists("cost", perk.getDefaultCost());
 
@@ -63,6 +57,7 @@ public class PerkManager extends Manager {
 
     public CommentedFileConfiguration loadSettings(Perk perk){
         File directory = new File(PlayerPerks.getInstance().getDataFolder(), "perks");
+        //noinspection ResultOfMethodCallIgnored
         directory.mkdirs();
 
         File file = new File(directory, perk.getID() + ".yml");
@@ -71,8 +66,8 @@ public class PerkManager extends Manager {
     }
 
     public void registerPerk(Perk perk) {
-        instance.perks.put(perk.getName(), perk);
-        instance.perIDs.put(perk.getID(), perk);
+        perks.put(perk.getName(), perk);
+        perIDs.put(perk.getID(), perk);
         PlayerPerks.getInstance().getLogger().info("Registering Perk: " + perk.getName());
         setDefaultSettings(perk);
     }
@@ -85,9 +80,15 @@ public class PerkManager extends Manager {
         return this.perks.get(name);
     }
 
+    public Perk getPerkByID(String ID) {
+        return this.perIDs.get(ID);
+    }
+
     @Override
     public void reload() {
-
+        for (Perk perk : PlayerPerks.getInstance().getManager(PerkManager.class).getPerks()) {
+            loadSettings(perk);
+        }
     }
 
     @Override

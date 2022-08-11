@@ -37,35 +37,27 @@ public class DataManager extends AbstractDataManager implements Listener {
         this.playerData.remove(uuid);
     }
 
-    public void getPerks(UUID uuid) {
-
-    }
-
     public void addPerk(String uuid, String perk) {
-        this.async(() -> {
-            this.getDatabaseConnector().connect(connection -> {
-                String insertQuery = "INSERT INTO " + this.getTablePrefix() + "perks (uuid, perk) " +
-                        "VALUES (?, ?)";
-                try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-                    statement.setString(1, uuid.toString());
-                    statement.setString(2, perk);
-                    statement.executeUpdate();
-                }
-            });
-        });
+        this.async(() -> this.getDatabaseConnector().connect(connection -> {
+            String insertQuery = "INSERT INTO " + this.getTablePrefix() + "perks (uuid, perk) " +
+                    "VALUES (?, ?)";
+            try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+                statement.setString(1, uuid);
+                statement.setString(2, perk);
+                statement.executeUpdate();
+            }
+        }));
     }
 
     public void removePerk(String uuid, String perk) {
-        this.async(() -> {
-            this.getDatabaseConnector().connect(connection -> {
-                String deleteQuery = "DELETE FROM " + this.getTablePrefix() + "perks WHERE uuid = ? AND perk = ?";
-                try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
-                    statement.setString(1, uuid.toString());
-                    statement.setString(2, perk);
-                    statement.executeUpdate();
-                }
-            });
-        });
+        this.async(() -> this.getDatabaseConnector().connect(connection -> {
+            String deleteQuery = "DELETE FROM " + this.getTablePrefix() + "perks WHERE uuid = ? AND perk = ?";
+            try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+                statement.setString(1, uuid);
+                statement.setString(2, perk);
+                statement.executeUpdate();
+            }
+        }));
     }
 
     public void getPlayerData(UUID uuid, Consumer<PlayerData> callback) {
@@ -74,70 +66,74 @@ public class DataManager extends AbstractDataManager implements Listener {
             return;
         }
 
-        this.async(() -> {
-            this.databaseConnector.connect(connection -> {
-                PlayerData playerData;
-                String dataQuery = "SELECT * FROM " + this.getTablePrefix() + "player_data WHERE uuid = ?";
-                try (PreparedStatement statement = connection.prepareStatement(dataQuery)) {
-                    statement.setString(1, uuid.toString());
-                    ResultSet resultSet = statement.executeQuery();
+        this.async(() -> this.databaseConnector.connect(connection -> {
+            PlayerData playerData;
+            String dataQuery = "SELECT * FROM " + this.getTablePrefix() + "player_data WHERE uuid = ?";
+            try (PreparedStatement statement = connection.prepareStatement(dataQuery)) {
+                statement.setString(1, uuid.toString());
+                ResultSet resultSet = statement.executeQuery();
 
-                    if(resultSet.next()){
-                        int points = resultSet.getInt("points");
+                if(resultSet.next()){
+                    int points = resultSet.getInt("points");
 
-                        playerData = new PlayerData(uuid);
-                        playerData.setPoints(points);
+                    playerData = new PlayerData(uuid);
+                    playerData.setPoints(points);
 
-                        this.playerData.put(uuid, playerData);
-                    }else{
-                        playerData = new PlayerData(uuid);
-                        this.playerData.put(uuid, playerData);
-                        callback.accept(playerData);
-                    }
+                    this.playerData.put(uuid, playerData);
+                }else{
+                    playerData = new PlayerData(uuid);
+                    this.playerData.put(uuid, playerData);
+                    callback.accept(playerData);
                 }
+            }
 
-                String perksQuery = "SELECT * FROM " + this.getTablePrefix() + "perks WHERE uuid = ?";
-                try (PreparedStatement statement = connection.prepareStatement(perksQuery)) {
-                    statement.setString(1, uuid.toString());
-                    ResultSet resultSet = statement.executeQuery();
-                    while(resultSet.next()){
-                        String perk = resultSet.getString("perk");
-                        playerData.addPerk(uuid, perk);
-                    }
+            String perksQuery = "SELECT * FROM " + this.getTablePrefix() + "perks WHERE uuid = ?";
+            try (PreparedStatement statement = connection.prepareStatement(perksQuery)) {
+                statement.setString(1, uuid.toString());
+                ResultSet resultSet = statement.executeQuery();
+                while(resultSet.next()){
+                    String perk = resultSet.getString("perk");
+                    playerData.addPerk(perk);
                 }
-            });
-        });
+            }
+        }));
     }
 
     public void updatePlayerData(PlayerData playerData){
-        this.async(() -> {
-            this.databaseConnector.connect(connection -> {
-                boolean create;
+        this.async(() -> this.databaseConnector.connect(connection -> {
+            boolean create;
 
-                String checkQuery = "SELECT 1 FROM " + this.getTablePrefix() + "player_data WHERE uuid = ?";
-                try (PreparedStatement statement = connection.prepareStatement(checkQuery)) {
-                    statement.setString(1, playerData.getUuid().toString());
-                    ResultSet result = statement.executeQuery();
-                    create = !result.next();
-                }
+            String checkQuery = "SELECT 1 FROM " + this.getTablePrefix() + "player_data WHERE uuid = ?";
+            try (PreparedStatement statement = connection.prepareStatement(checkQuery)) {
+                statement.setString(1, playerData.getUUID().toString());
+                ResultSet result = statement.executeQuery();
+                create = !result.next();
+            }
 
-                if(create){
-                    String insertQuery = "INSERT INTO " + this.getTablePrefix() + "player_data (uuid, points) " +
-                            "VALUES (?, ?)";
-                    try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
-                        statement.setString(1, playerData.getUuid().toString());
-                        statement.setInt(2, playerData.getPoints());
-                        statement.executeUpdate();
-                    }
-                }else{
-                    String updateQuery = "UPDATE " + this.getTablePrefix() + "player_data SET points = ? WHERE uuid = ?";
-                    try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
-                        statement.setInt(1, playerData.getPoints());
-                        statement.setString(2, playerData.getUuid().toString());
-                        statement.executeUpdate();
-                    }
+            if(create){
+                String insertQuery = "INSERT INTO " + this.getTablePrefix() + "player_data (uuid, points) " +
+                        "VALUES (?, ?)";
+                try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+                    statement.setString(1, playerData.getUUID().toString());
+                    statement.setInt(2, playerData.getPoints());
+                    statement.executeUpdate();
                 }
-            });
+            }else{
+                String updateQuery = "UPDATE " + this.getTablePrefix() + "player_data SET points = ? WHERE uuid = ?";
+                try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
+                    statement.setInt(1, playerData.getPoints());
+                    statement.setString(2, playerData.getUUID().toString());
+                    statement.executeUpdate();
+                }
+            }
+        }));
+    }
+
+    public void savePlayerData(){
+        this.databaseConnector.connect(connection -> {
+            for(PlayerData playerData : this.playerData.values()){
+                this.updatePlayerData(playerData);
+            }
         });
     }
 

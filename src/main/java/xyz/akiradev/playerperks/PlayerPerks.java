@@ -4,7 +4,7 @@ package xyz.akiradev.playerperks;
 import dev.rosewood.rosegarden.RosePlugin;
 import dev.rosewood.rosegarden.manager.*;
 import org.bukkit.Bukkit;
-import xyz.akiradev.playerperks.defaultPerks.PerkNoHunger;
+import xyz.akiradev.playerperks.events.PlayerEvents;
 import xyz.akiradev.playerperks.managers.*;
 
 import java.util.*;
@@ -20,28 +20,21 @@ public final class PlayerPerks extends RosePlugin {
 
     @Override
     protected void enable() {
-        registerPerks();
         DataManager dataManager = this.getManager(DataManager.class);
         Bukkit.getOnlinePlayers().forEach(player -> dataManager.getPlayerData(player.getUniqueId(), data -> {}));
-
-        this.getManager(GUIManager.class).createGUI();
+        getServer().getPluginManager().registerEvents(new PlayerEvents(this), this);
     }
 
     @Override
     protected void disable() {
-
-    }
-
-    private void registerPerks(){
-        PerkManager perkManager = this.getManager(PerkManager.class);
-        perkManager.registerPerk(new PerkNoHunger());
     }
 
     @Override
     protected List<Class<? extends Manager>> getManagerLoadPriority() {
         return Arrays.asList(
                 DataManager.class,
-                PerkManager.class
+                PerkManager.class,
+                GUIManager.class
         );
     }
 

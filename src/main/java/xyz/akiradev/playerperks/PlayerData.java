@@ -1,20 +1,25 @@
 package xyz.akiradev.playerperks;
 
+import org.bukkit.Bukkit;
+import xyz.akiradev.playerperks.managers.ConfigManager;
 import xyz.akiradev.playerperks.managers.DataManager;
+import xyz.akiradev.playerperks.managers.GUIManager;
+import xyz.akiradev.playerperks.managers.PerkManager;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
 public class PlayerData {
 
-    private UUID uuid;
+    private final UUID uuid;
     private int points;
-    private List<String> perks;
+    private final List<String> perks;
 
     public PlayerData(UUID uuid){
         this.uuid = uuid;
-        this.points = 0;
+        this.points = ConfigManager.Setting.BASE_POINTS.getInt();
         this.perks = new ArrayList<>();
     }
 
@@ -22,7 +27,7 @@ public class PlayerData {
         PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
     }
 
-    public UUID getUuid() {
+    public UUID getUUID() {
         return this.uuid;
     }
 
@@ -31,19 +36,64 @@ public class PlayerData {
     }
 
     public void setPoints(int points) {
-        this.points = points;
+        this.points = Math.min(points, ConfigManager.Setting.MAX_POINTS.getInt());
+        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+    }
+
+    public boolean addPoints(int points) {
+        if(this.points + points > ConfigManager.Setting.MAX_POINTS.getInt()){
+            return false;
+        }
+        this.points += points;
+        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+        return true;
+    }
+
+    public boolean removePoints(int points) {
+        if (this.points - points < 0) {
+            return false;
+        }
+        this.points -= points;
+        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+        return true;
     }
 
     public List<String> getPerks() {
-        return this.perks;
+        return perks;
     }
 
-    public void addPerk(UUID uuid, String perk){
-        this.perks.add(perk);
+    public boolean addPerk(String perk){
+        if (perks.contains(perk) || ConfigManager.Setting.MAX_PERKS.getInt() <= this.perks.size()) {
+            return false;
+        }
+        perks.add(perk);
+        PlayerPerks.getInstance().getManager(DataManager.class).addPerk(String.valueOf(uuid), perk);
+        return true;
     }
 
-    public void removePerk(UUID uuid, String perk){
-        this.perks.remove(perk);
+    public boolean removePerk(String perk){
+        if (!perks.contains(perk)) {
+            return false;
+        }
+        perks.remove(perk);
+        PlayerPerks.getInstance().getManager(DataManager.class).removePerk(String.valueOf(uuid), perk);
+        return true;
+    }
+
+    public void resetPerks(){
+        Iterator<String> iterator = perks.iterator();
+        while(iterator.hasNext()){
+            String perkID = iterator.next();
+            iterator.remove();
+            Perk perk = PlayerPerks.getInstance().getManager(PerkManager.class).getPerkByID(perkID);
+            perk.onSell(Bukkit.getPlayer(uuid));
+            addPoints(perk.getCost());
+        }
+        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+    }
+
+    public boolean hasPerk(String perk){
+        return this.perks.contains(perk);
     }
 
 }
