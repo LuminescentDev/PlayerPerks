@@ -94,7 +94,7 @@ public abstract class Perk {
         return defaultBlacklistedPerks;
     }
 
-    public int getdefaultCustomModelID() {
+    public int getDefaultCustomModelID() {
         return defaultCustomModelID;
     }
 

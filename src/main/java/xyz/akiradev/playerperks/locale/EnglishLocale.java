@@ -26,6 +26,7 @@ public class EnglishLocale implements Locale {
             this.put("no-permission-command", "You do not have permission to use this command.");
             this.put("unknown-command", "Unknown command. Use /playerperks help for help.");
             this.put("not-player", "You must be a player to use this command.");
+            this.put("specify-player", "You must specify a player.");
 
             this.put("#2", "Help Messages");
             this.put("command-help-description", "Shows this help info.");

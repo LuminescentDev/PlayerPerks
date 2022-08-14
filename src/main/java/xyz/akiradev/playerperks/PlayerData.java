@@ -3,7 +3,6 @@ package xyz.akiradev.playerperks;
 import org.bukkit.Bukkit;
 import xyz.akiradev.playerperks.managers.ConfigManager;
 import xyz.akiradev.playerperks.managers.DataManager;
-import xyz.akiradev.playerperks.managers.GUIManager;
 import xyz.akiradev.playerperks.managers.PerkManager;
 
 import java.util.ArrayList;

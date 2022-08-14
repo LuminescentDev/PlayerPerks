@@ -36,6 +36,7 @@ public class PerkManager extends Manager {
         changed |= this.setIfNotExists("description", perk.getDefaultDescription());
         changed |= this.setIfNotExists("material", perk.getDefaultMaterial().name());
         changed |= this.setIfNotExists("cost", perk.getDefaultCost());
+        changed |= this.setIfNotExists("cooldown", perk.getDefaultCustomModelID());
         changed |= this.setIfNotExists("blacklisted-perks", perk.getDefaultBlacklistedPerks());
         changed |= this.setIfNotExists("enabled", true);
 

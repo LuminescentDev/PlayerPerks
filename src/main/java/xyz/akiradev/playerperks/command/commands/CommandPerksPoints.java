@@ -29,7 +29,7 @@ public class CommandPerksPoints extends RoseCommand {
         CommandSender sender = context.getSender();
 
         if(!(sender instanceof Player) && player == null){
-            locale.sendMessage(sender, "specifty-player");
+            locale.sendMessage(sender, "specify-player");
             return;
         }
 
