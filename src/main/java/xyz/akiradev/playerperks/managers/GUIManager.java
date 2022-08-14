@@ -46,6 +46,7 @@ public class GUIManager extends Manager {
                             playerData.removePoints(perk.getCost());
                             localeManager.sendMessage(viewer, "perk-bought", StringPlaceholders.single("perk", perk.getName()));
                             perk.onPurchase(viewer);
+                            PlayerPerks.getInstance().getManager(DataManager.class).addPerk(playerData.getUUID().toString(), perk.getID());
                             openGUI(viewer);
                         }else{
                             localeManager.sendMessage(viewer, "perk-already-owned", StringPlaceholders.single("perk", perk.getName()));

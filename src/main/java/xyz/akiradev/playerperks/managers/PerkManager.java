@@ -11,6 +11,7 @@ import xyz.akiradev.playerperks.PlayerPerks;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PerkManager extends Manager {
@@ -35,6 +36,8 @@ public class PerkManager extends Manager {
         changed |= this.setIfNotExists("description", perk.getDefaultDescription());
         changed |= this.setIfNotExists("material", perk.getDefaultMaterial().name());
         changed |= this.setIfNotExists("cost", perk.getDefaultCost());
+        changed |= this.setIfNotExists("blacklisted-perks", perk.getDefaultBlacklistedPerks());
+        changed |= this.setIfNotExists("enabled", true);
 
         if (changed) this.config.save();
 
@@ -66,10 +69,11 @@ public class PerkManager extends Manager {
     }
 
     public void registerPerk(Perk perk) {
+        setDefaultSettings(perk);
+        if(!this.loadSettings(perk).getBoolean("enabled")) return;
         perks.put(perk.getName(), perk);
         perIDs.put(perk.getID(), perk);
         PlayerPerks.getInstance().getLogger().info("Registering Perk: " + perk.getName());
-        setDefaultSettings(perk);
     }
 
     public Collection<Perk> getPerks() {
@@ -82,6 +86,11 @@ public class PerkManager extends Manager {
 
     public Perk getPerkByID(String ID) {
         return this.perIDs.get(ID);
+    }
+
+    public boolean isBlacklisted(String perk, String perkToCheck) {
+        List<String> blacklistedPerks = this.loadSettings(getPerkByID(perk)).getStringList("blacklisted-perks");
+        return blacklistedPerks.size() > 0 && blacklistedPerks.contains(perkToCheck);
     }
 
     @Override

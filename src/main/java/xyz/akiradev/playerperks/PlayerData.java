@@ -62,12 +62,17 @@ public class PlayerData {
         return perks;
     }
 
-    public boolean addPerk(String perk){
-        if (perks.contains(perk) || ConfigManager.Setting.MAX_PERKS.getInt() <= this.perks.size()) {
+    public boolean addPerk(String perkID){
+        PerkManager perkManager = PlayerPerks.getInstance().getManager(PerkManager.class);
+        if (perks.contains(perkID) || ConfigManager.Setting.MAX_PERKS.getInt() <= this.perks.size()) {
             return false;
         }
-        perks.add(perk);
-        PlayerPerks.getInstance().getManager(DataManager.class).addPerk(String.valueOf(uuid), perk);
+        for(String perkToCheck : perks){
+            if(perkManager.isBlacklisted(perkID, perkToCheck)){
+                return false;
+            }
+        }
+        perks.add(perkID);
         return true;
     }
 

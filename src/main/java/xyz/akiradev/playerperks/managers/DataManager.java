@@ -39,12 +39,22 @@ public class DataManager extends AbstractDataManager implements Listener {
 
     public void addPerk(String uuid, String perk) {
         this.async(() -> this.getDatabaseConnector().connect(connection -> {
-            String insertQuery = "INSERT INTO " + this.getTablePrefix() + "perks (uuid, perk) " +
-                    "VALUES (?, ?)";
-            try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
+            boolean hasPerk;
+            String selectQuery = "SELECT * FROM " + this.getTablePrefix() + "perks WHERE uuid = ? AND perk = ?";
+            try (PreparedStatement statement = connection.prepareStatement(selectQuery)) {
                 statement.setString(1, uuid);
                 statement.setString(2, perk);
-                statement.executeUpdate();
+                ResultSet resultSet = statement.executeQuery();
+                hasPerk = resultSet.next();
+            }
+            if(!hasPerk) {
+                String insertQuery = "INSERT INTO " + this.getTablePrefix() + "perks (uuid, perk) " +
+                        "VALUES (?, ?)";
+                try (PreparedStatement pstatement = connection.prepareStatement(insertQuery)) {
+                    pstatement.setString(1, uuid);
+                    pstatement.setString(2, perk);
+                    pstatement.executeUpdate();
+                }
             }
         }));
     }
