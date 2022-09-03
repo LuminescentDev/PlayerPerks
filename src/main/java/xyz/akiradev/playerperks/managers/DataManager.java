@@ -70,6 +70,16 @@ public class DataManager extends AbstractDataManager implements Listener {
         }));
     }
 
+    public void clearPerks(String uuid){
+        this.async(() -> this.getDatabaseConnector().connect(connection -> {
+            String deleteQuery = "DELETE FROM " + this.getTablePrefix() + "perks WHERE uuid = ?";
+            try (PreparedStatement statement = connection.prepareStatement(deleteQuery)) {
+                statement.setString(1, uuid);
+                statement.executeUpdate();
+            }
+        }));
+    }
+
     public void getPlayerData(UUID uuid, Consumer<PlayerData> callback) {
         if(this.playerData.containsKey(uuid)) {
             callback.accept(this.playerData.get(uuid));
@@ -85,9 +95,11 @@ public class DataManager extends AbstractDataManager implements Listener {
 
                 if(resultSet.next()){
                     int points = resultSet.getInt("points");
+                    long resetCooldown = resultSet.getLong("reset_cooldown");
 
                     playerData = new PlayerData(uuid);
                     playerData.setPoints(points);
+                    playerData.setCooldown(resetCooldown);
 
                     this.playerData.put(uuid, playerData);
                 }else{
@@ -121,18 +133,20 @@ public class DataManager extends AbstractDataManager implements Listener {
             }
 
             if(create){
-                String insertQuery = "INSERT INTO " + this.getTablePrefix() + "player_data (uuid, points) " +
-                        "VALUES (?, ?)";
+                String insertQuery = "INSERT INTO " + this.getTablePrefix() + "player_data (uuid, points, reset_cooldown) " +
+                        "VALUES (?, ?, ?)";
                 try (PreparedStatement statement = connection.prepareStatement(insertQuery)) {
                     statement.setString(1, playerData.getUUID().toString());
                     statement.setInt(2, playerData.getPoints());
+                    statement.setLong(3, playerData.getCooldown());
                     statement.executeUpdate();
                 }
             }else{
-                String updateQuery = "UPDATE " + this.getTablePrefix() + "player_data SET points = ? WHERE uuid = ?";
+                String updateQuery = "UPDATE " + this.getTablePrefix() + "player_data SET points = ?, reset_cooldown = ? WHERE uuid = ?";
                 try (PreparedStatement statement = connection.prepareStatement(updateQuery)) {
                     statement.setInt(1, playerData.getPoints());
                     statement.setString(2, playerData.getUUID().toString());
+                    statement.setLong(3, playerData.getCooldown());
                     statement.executeUpdate();
                 }
             }

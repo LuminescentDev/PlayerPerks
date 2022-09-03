@@ -18,7 +18,6 @@ public class PerkManager extends Manager {
 
     private CommentedFileConfiguration config;
     private final Map<String, Perk> perks = new HashMap<>();
-    private final Map<String, Perk> perIDs = new HashMap<>();
 
     public PerkManager(RosePlugin rosePlugin) {
         super(rosePlugin);
@@ -36,7 +35,7 @@ public class PerkManager extends Manager {
         changed |= this.setIfNotExists("description", perk.getDefaultDescription());
         changed |= this.setIfNotExists("material", perk.getDefaultMaterial().name());
         changed |= this.setIfNotExists("cost", perk.getDefaultCost());
-        changed |= this.setIfNotExists("cooldown", perk.getDefaultCustomModelID());
+        changed |= this.setIfNotExists("CustomModelID", perk.getDefaultCustomModelID());
         changed |= this.setIfNotExists("blacklisted-perks", perk.getDefaultBlacklistedPerks());
         changed |= this.setIfNotExists("enabled", true);
 
@@ -72,8 +71,7 @@ public class PerkManager extends Manager {
     public void registerPerk(Perk perk) {
         setDefaultSettings(perk);
         if(!this.loadSettings(perk).getBoolean("enabled")) return;
-        perks.put(perk.getName(), perk);
-        perIDs.put(perk.getID(), perk);
+        perks.put(perk.getID(), perk);
         PlayerPerks.getInstance().getLogger().info("Registering Perk: " + perk.getName());
     }
 
@@ -81,16 +79,12 @@ public class PerkManager extends Manager {
         return this.perks.values();
     }
 
-    public Perk getPerk(String name) {
-        return this.perks.get(name);
-    }
-
-    public Perk getPerkByID(String ID) {
-        return this.perIDs.get(ID);
+    public Perk getPerk(String ID) {
+        return this.perks.get(ID);
     }
 
     public boolean isBlacklisted(String perk, String perkToCheck) {
-        List<String> blacklistedPerks = this.loadSettings(getPerkByID(perk)).getStringList("blacklisted-perks");
+        List<String> blacklistedPerks = this.loadSettings(getPerk(perk)).getStringList("blacklisted-perks");
         return blacklistedPerks.size() > 0 && blacklistedPerks.contains(perkToCheck);
     }
 

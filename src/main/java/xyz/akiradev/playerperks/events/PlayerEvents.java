@@ -11,20 +11,15 @@ import xyz.akiradev.playerperks.managers.DataManager;
 
 public class PlayerEvents implements Listener {
 
-    private final DataManager dataManager;
-
-    public PlayerEvents(PlayerPerks plugin) {
-        this.dataManager = plugin.getManager(DataManager.class);
-    }
-
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerJoined(PlayerJoinEvent event) {
-        dataManager.getPlayerData(event.getPlayer().getUniqueId(), (playerData) -> {});
+        PlayerPerks.getInstance().getManager(DataManager.class).getPlayerData(event.getPlayer().getUniqueId(), (playerData) -> {});
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        DataManager dataManager = PlayerPerks.getInstance().getManager(DataManager.class);
         dataManager.getPlayerData(player.getUniqueId()).save();
         dataManager.unloadPlayerData(player.getUniqueId());
     }

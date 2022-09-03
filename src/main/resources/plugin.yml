@@ -3,4 +3,5 @@ version: '${project.version}'
 main: xyz.akiradev.playerperks.PlayerPerks
 api-version: 1.19
 authors: [ AkiraDev ]
+softdepend: [ PlaceholderAPI ]
 description: Allow players to choose custom buy custom perks using perk points to build their own custom something idk

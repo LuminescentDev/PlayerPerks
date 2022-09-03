@@ -14,11 +14,15 @@ public class PlayerData {
 
     private final UUID uuid;
     private int points;
+    private int totalPoints;
     private final List<String> perks;
+    private Long cooldown;
 
     public PlayerData(UUID uuid){
         this.uuid = uuid;
+        this.cooldown = 0L;
         this.points = ConfigManager.Setting.BASE_POINTS.getInt();
+        this.totalPoints = ConfigManager.Setting.BASE_POINTS.getInt();
         this.perks = new ArrayList<>();
     }
 
@@ -36,7 +40,14 @@ public class PlayerData {
 
     public void setPoints(int points) {
         this.points = Math.min(points, ConfigManager.Setting.MAX_POINTS.getInt());
-        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+    }
+
+    public void setCooldown(long cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public Long getCooldown() {
+        return this.cooldown;
     }
 
     public boolean addPoints(int points) {
@@ -75,13 +86,14 @@ public class PlayerData {
         return true;
     }
 
-    public boolean removePerk(String perk){
-        if (!perks.contains(perk)) {
-            return false;
+    public void removePerk(Perk perk){
+        String id = perk.getID();
+        if (!perks.contains(id)) {
+            return;
         }
-        perks.remove(perk);
-        PlayerPerks.getInstance().getManager(DataManager.class).removePerk(String.valueOf(uuid), perk);
-        return true;
+        perk.onSell(Bukkit.getPlayer(uuid));
+        perks.remove(id);
+        PlayerPerks.getInstance().getManager(DataManager.class).removePerk(String.valueOf(uuid), perk.getID());
     }
 
     public void resetPerks(){
@@ -89,11 +101,14 @@ public class PlayerData {
         while(iterator.hasNext()){
             String perkID = iterator.next();
             iterator.remove();
-            Perk perk = PlayerPerks.getInstance().getManager(PerkManager.class).getPerkByID(perkID);
-            perk.onSell(Bukkit.getPlayer(uuid));
-            addPoints(perk.getCost());
+            Perk perk = PlayerPerks.getInstance().getManager(PerkManager.class).getPerk(perkID);
+            removePerk(perk);
         }
-        PlayerPerks.getInstance().getManager(DataManager.class).updatePlayerData(this);
+        DataManager dataManager = PlayerPerks.getInstance().getManager(DataManager.class);
+        dataManager.updatePlayerData(this);
+        dataManager.clearPerks(String.valueOf(uuid));
+        setCooldown(Utils.createCooldown(ConfigManager.Setting.PERK_RESET_COOLDOWN_DAYS.getInt(), ConfigManager.Setting.PERK_RESET_COOLDOWN_HOURS.getInt(), ConfigManager.Setting.PERK_RESET_COOLDOWN_MINUTES.getInt(), ConfigManager.Setting.PERK_RESET_COOLDOWN_SECONDS.getInt()));
+
     }
 
     public boolean hasPerk(String perk){

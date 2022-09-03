@@ -35,7 +35,7 @@ public class CommandPerksPoints extends RoseCommand {
 
         Player target = player == null ? (Player) sender : player;
 
-        locale.sendMessage(sender, "points", StringPlaceholders.builder("player", target.getDisplayName()).addPlaceholder("points", PlayerPerks.getInstance().getManager(DataManager.class).getPlayerData(target.getUniqueId()).getPoints()).build());
+        locale.sendMessage(sender, "points", StringPlaceholders.builder("player", target.getName()).addPlaceholder("points", PlayerPerks.getInstance().getManager(DataManager.class).getPlayerData(target.getUniqueId()).getPoints()).build());
 
     }
 
@@ -50,9 +50,9 @@ public class CommandPerksPoints extends RoseCommand {
             final DataManager dataManager = PlayerPerks.getInstance().getManager(DataManager.class);
             final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
             if (dataManager.getPlayerData(player.getUniqueId()).addPoints(points)){
-                locale.sendMessage(context.getSender(), "points-added", StringPlaceholders.builder("player", player.getDisplayName()).addPlaceholder("points", points).build());
+                locale.sendMessage(context.getSender(), "points-added", StringPlaceholders.builder("player", player.getName()).addPlaceholder("points", points).build());
             } else {
-                locale.sendMessage(context.getSender(), "points-not-added", StringPlaceholders.builder("player", player.getDisplayName()).addPlaceholder("points", points).build());
+                locale.sendMessage(context.getSender(), "points-not-added", StringPlaceholders.builder("player", player.getName()).addPlaceholder("points", points).build());
             }
         }
 
@@ -79,9 +79,9 @@ public class CommandPerksPoints extends RoseCommand {
             final DataManager dataManager = PlayerPerks.getInstance().getManager(DataManager.class);
             final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
             if (dataManager.getPlayerData(player.getUniqueId()).removePoints(points)){
-                locale.sendMessage(context.getSender(), "points-removed", StringPlaceholders.builder("player", player.getDisplayName()).addPlaceholder("points", points).build());
+                locale.sendMessage(context.getSender(), "points-removed", StringPlaceholders.builder("player", player.getName()).addPlaceholder("points", points).build());
             } else {
-                locale.sendMessage(context.getSender(), "points-not-removed", StringPlaceholders.builder("player", player.getDisplayName()).addPlaceholder("points", points).build());
+                locale.sendMessage(context.getSender(), "points-not-removed", StringPlaceholders.builder("player", player.getName()).addPlaceholder("points", points).build());
             }
         }
 
@@ -108,7 +108,7 @@ public class CommandPerksPoints extends RoseCommand {
             final DataManager dataManager = PlayerPerks.getInstance().getManager(DataManager.class);
             final LocaleManager locale = this.rosePlugin.getManager(LocaleManager.class);
             if(ConfigManager.Setting.MAX_POINTS.getInt() < points){
-                locale.sendMessage(context.getSender(), "points-too-high", StringPlaceholders.builder("player", player.getDisplayName()).addPlaceholder("points", points).build());
+                locale.sendMessage(context.getSender(), "points-too-high", StringPlaceholders.builder("player", player.getName()).addPlaceholder("points", points).build());
             }
             dataManager.getPlayerData(player.getUniqueId()).setPoints(points);
         }

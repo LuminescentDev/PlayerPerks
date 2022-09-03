@@ -54,8 +54,8 @@ public abstract class Perk {
             cost = "Cost: " + getCost();
         }
         for (String blacklistedPerk : getBlacklistedPerks()) {
-            if(perkManager.getPerkByID(blacklistedPerk) != null){
-                blacklistedPerks.append(perkManager.getPerkByID(blacklistedPerk).getName()).append(", ");
+            if(perkManager.getPerk(blacklistedPerk) != null){
+                blacklistedPerks.append(perkManager.getPerk(blacklistedPerk).getName()).append(", ");
             }
         }
         return ItemBuilder.from(getMaterial())

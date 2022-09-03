@@ -8,7 +8,7 @@ import java.util.Map;
 public class EnglishLocale implements Locale {
     @Override
     public String getLocaleName() {
-        return "En_US";
+        return "en_US";
     }
 
     @Override
@@ -27,6 +27,7 @@ public class EnglishLocale implements Locale {
             this.put("unknown-command", "Unknown command. Use /playerperks help for help.");
             this.put("not-player", "You must be a player to use this command.");
             this.put("specify-player", "You must specify a player.");
+            this.put("reset-cooldown", "You are still on cooldown for %cooldown%");
 
             this.put("#2", "Help Messages");
             this.put("command-help-description", "Shows this help info.");
@@ -37,6 +38,7 @@ public class EnglishLocale implements Locale {
             this.put("perk-not-found", "Could not find perk %perk%.");
             this.put("perk-already-owned", "You already own %perk%.");
             this.put("perk-bought", "You have bought %perk%.");
+            this.put("perk-reset", "Perks successfully reset.");
 
             this.put("#4", "Points Messages");
             this.put("points", "%player% has %points% points.");

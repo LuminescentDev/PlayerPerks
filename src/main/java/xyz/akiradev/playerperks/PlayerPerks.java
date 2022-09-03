@@ -22,7 +22,7 @@ public final class PlayerPerks extends RosePlugin {
     protected void enable() {
         DataManager dataManager = this.getManager(DataManager.class);
         Bukkit.getOnlinePlayers().forEach(player -> dataManager.getPlayerData(player.getUniqueId(), data -> {}));
-        getServer().getPluginManager().registerEvents(new PlayerEvents(this), this);
+        getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
     }
 
     @Override
