@@ -23,9 +23,8 @@ public class PerkManager extends Manager {
         super(rosePlugin);
     }
 
-    private void setDefaultSettings(Perk perk){
+    private void setDefaultSettings(Perk perk) {
         File directory = new File(PlayerPerks.getInstance().getDataFolder(), "perks");
-        //noinspection ResultOfMethodCallIgnored
         directory.mkdirs();
 
         File file = new File(directory, perk.getID() + ".yml");
@@ -39,13 +38,15 @@ public class PerkManager extends Manager {
         changed |= this.setIfNotExists("blacklisted-perks", perk.getDefaultBlacklistedPerks());
         changed |= this.setIfNotExists("enabled", true);
 
-        if (changed) this.config.save();
-
+        if (changed) {
+            this.config.save();
+        }
     }
 
     private boolean setIfNotExists(String setting, Object value, String... comments) {
-        if (this.config.get(setting) != null)
+        if (this.config.get(setting) != null) {
             return false;
+        }
 
         String defaultMessage = "Default: ";
         if (value instanceof String && RoseGardenUtils.containsConfigSpecialCharacters((String) value)) {
@@ -58,9 +59,8 @@ public class PerkManager extends Manager {
         return true;
     }
 
-    public CommentedFileConfiguration loadSettings(Perk perk){
+    public CommentedFileConfiguration loadSettings(Perk perk) {
         File directory = new File(PlayerPerks.getInstance().getDataFolder(), "perks");
-        //noinspection ResultOfMethodCallIgnored
         directory.mkdirs();
 
         File file = new File(directory, perk.getID() + ".yml");
@@ -70,8 +70,12 @@ public class PerkManager extends Manager {
 
     public void registerPerk(Perk perk) {
         setDefaultSettings(perk);
-        if(!this.loadSettings(perk).getBoolean("enabled")) return;
-        perks.put(perk.getID(), perk);
+        CommentedFileConfiguration perkConfig = this.loadSettings(perk);
+        if (!perkConfig.getBoolean("enabled")) {
+            return;
+        }
+
+        this.perks.putIfAbsent(perk.getID(), perk);
         PlayerPerks.getInstance().getLogger().info("Registering Perk: " + perk.getName());
     }
 
@@ -97,7 +101,7 @@ public class PerkManager extends Manager {
 
     @Override
     public void disable() {
-
+        // Any necessary cleanup or operations when the plugin is disabled
     }
 
 }

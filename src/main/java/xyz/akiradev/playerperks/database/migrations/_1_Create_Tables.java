@@ -19,7 +19,6 @@ public class _1_Create_Tables extends DataMigration {
             statement.executeUpdate("CREATE TABLE " + tablePrefix + "player_data (" +
                     "uuid VARCHAR(36) NOT NULL, " +
                     "points INTEGER NOT NULL, " +
-                    "points_total INTEGER NOT NULL, " +
                     "reset_cooldown BIGINT NOT NULL, " +
                     "UNIQUE (uuid)" +
                     ")");
