@@ -1,6 +1,7 @@
 package xyz.akiradev.playerperks;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import xyz.akiradev.playerperks.managers.ConfigManager;
 import xyz.akiradev.playerperks.managers.DataManager;
 import xyz.akiradev.playerperks.managers.PerkManager;
@@ -125,7 +126,8 @@ public class PlayerData {
 
 
     public boolean hasPerk(String perk) {
-        return this.perks.contains(perk);
+        Player player = Bukkit.getPlayer(uuid);
+        return this.perks.contains(perk) && player != null && player.hasPermission("playerperks.perk." + perk);
     }
 
 }
