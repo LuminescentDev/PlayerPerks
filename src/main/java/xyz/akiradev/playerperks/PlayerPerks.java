@@ -34,7 +34,7 @@ public final class PlayerPerks extends RosePlugin {
         return Arrays.asList(
                 DataManager.class,
                 PerkManager.class,
-                GUIManager.class
+                PerksGUIManager.class
         );
     }
 

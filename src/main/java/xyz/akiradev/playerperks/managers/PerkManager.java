@@ -84,7 +84,10 @@ public class PerkManager extends Manager {
     }
 
     public Perk getPerk(String ID) {
-        return this.perks.get(ID);
+        if(this.perks.containsKey(ID)) {
+            return this.perks.get(ID);
+        }
+        return null;
     }
 
     public boolean isBlacklisted(String perk, String perkToCheck) {

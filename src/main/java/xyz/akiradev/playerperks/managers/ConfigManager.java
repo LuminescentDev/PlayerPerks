@@ -16,7 +16,17 @@ public class ConfigManager extends AbstractConfigurationManager {
         PERK_RESET_COOLDOWN_DAYS("perk-reset-cooldown.days", 1),
         PERK_RESET_COOLDOWN_HOURS("perk-reset-cooldown.hours", 0),
         PERK_RESET_COOLDOWN_MINUTES("perk-reset-cooldown.minutes", 0),
-        PERK_RESET_COOLDOWN_SECONDS("perk-reset-cooldown.seconds", 0);
+        PERK_RESET_COOLDOWN_SECONDS("perk-reset-cooldown.seconds", 0),
+        GUI_ITEM_MODELS("gui-item-models", null),
+        GUI_ITEM_MODELS_POSITIVE_PERKS("gui-item-models.positive-perks", 1),
+        GUI_ITEM_MODELS_NEGATIVE_PERKS("gui-item-models.negative-perks", 2),
+        GUI_ITEM_MODELS_RESET_PERKS("gui-item-models.reset-perks", 3),
+        GUI_ITEM_MODELS_NEXT_PAGE("gui-item-models.next-page", 4),
+        GUI_ITEM_MODELS_PREVIOUS_PAGE("gui-item-models.previous-page", 5),
+        GUI_ITEM_MODELS_POINTS("gui-item-models.points", 6),
+        GUI_ITEM_MODELS_SHOW_UNOWNED_PERKS("gui-item-models.show-unowned-perks", 7),
+        GUI_ITEM_MODELS_SHOW_OWNED_PERKS("gui-item-models.show-owned-perks", 8),
+        GUI_ITEM_MODELS_SHOW_ALL_PERKS("gui-item-models.show-all-perks", 9);
         private final String key;
         private final Object defaultValue;
         private final String[] comments;

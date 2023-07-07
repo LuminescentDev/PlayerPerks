@@ -6,7 +6,7 @@ import dev.rosewood.rosegarden.command.framework.CommandContext;
 import dev.rosewood.rosegarden.command.framework.RoseCommandWrapper;
 import dev.rosewood.rosegarden.command.framework.annotation.RoseExecutable;
 import org.bukkit.entity.Player;
-import xyz.akiradev.playerperks.managers.GUIManager;
+import xyz.akiradev.playerperks.managers.PerksGUIManager;
 import xyz.akiradev.playerperks.managers.LocaleManager;
 
 public class CommandPerks extends BaseCommand {
@@ -23,7 +23,7 @@ public class CommandPerks extends BaseCommand {
             locale.sendMessage(context.getSender(), " ");
             return;
         }
-        this.rosePlugin.getManager(GUIManager.class).openGUI((player));
+        this.rosePlugin.getManager(PerksGUIManager.class).openGUI((player));
     }
 
     @Override

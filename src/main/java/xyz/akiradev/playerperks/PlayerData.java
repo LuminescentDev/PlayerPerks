@@ -7,7 +7,6 @@ import xyz.akiradev.playerperks.managers.DataManager;
 import xyz.akiradev.playerperks.managers.PerkManager;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -73,6 +72,9 @@ public class PlayerData {
 
     public boolean addPerk(String perkID) {
         PerkManager perkManager = PlayerPerks.getInstance().getManager(PerkManager.class);
+        if(perkManager.getPerk(perkID) == null) {
+            return false;
+        }
         if (perks.contains(perkID) || ConfigManager.Setting.MAX_PERKS.getInt() <= this.perks.size()) {
             return false;
         }

@@ -20,7 +20,7 @@ public class EnglishLocale implements Locale {
     public Map<String, Object> getDefaultLocaleValues() {
         return new LinkedHashMap<>() {{
             this.put("#0", "Plugin Message Prefix");
-            this.put("prefix", "&8&l[<g:#e41101:#1b34b8>PlayerPerks&8&l] ");
+            this.put("prefix", "&8&l[<g:#e41101:#1b34b8>PlayerPerks&8&l]&r ");
 
             this.put("#1", "Command Responses");
             this.put("no-permission-command", "You do not have permission to use this command.");
@@ -52,6 +52,18 @@ public class EnglishLocale implements Locale {
             this.put("points-not-set", "Could not set %player%'s points to %points%.");
             this.put("points-too-high", "You cannot set %player% to %points% points because they are higher than the configured max, points have been set to configured max.");
 
+            this.put("#5", "GUI Messages");
+            this.put("gui-positive-title", "Positive Perks");
+            this.put("gui-negative-title", "Negative Perks");
+            this.put("gui-previous", "Previous");
+            this.put("gui-next", "Next");
+            this.put("gui-reset-perks", "Reset Perks");
+            this.put("gui-points", "Points: %points%");
+            this.put("gui-show-positive-perks", "Show Positive Perks");
+            this.put("gui-show-negative-perks", "Show Negative Perks");
+            this.put("gui-unowned-perks", "Unowned Perks");
+            this.put("gui-owned-perks", "Owned Perks");
+            this.put("gui-all-perks", "All Perks");
         }};
     }
 }
