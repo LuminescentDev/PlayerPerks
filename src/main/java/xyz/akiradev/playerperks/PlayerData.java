@@ -126,9 +126,15 @@ public class PlayerData {
         dataManager.updatePlayerData(playerData);
     }
 
-
     public boolean hasPerk(String perk) {
+        return this.perks.contains(perk);
+    }
+
+    public boolean hasPerk(String perk, boolean permcheck) {
         Player player = Bukkit.getPlayer(uuid);
+        if(!permcheck) {
+            return this.perks.contains(perk);
+        }
         return this.perks.contains(perk) && player != null && player.hasPermission("playerperks.perk." + perk);
     }
 
